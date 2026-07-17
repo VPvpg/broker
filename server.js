@@ -3,19 +3,17 @@ const { ExpressPeerServer } = require('peer');
 const app = express();
 const server = require('http').createServer(app);
 
-// Разрешаем CORS для всех доменов
+// CORS для всех
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "*");
     next();
 });
 
 const peerServer = ExpressPeerServer(server, {
-    proxied: true,
-    path: '/' // Слушаем корень
+    path: '/' // PeerJS будет работать в корне /myapp
 });
 
-app.use('/myapp', peerServer); // Весь трафик идет через /myapp
+app.use('/myapp', peerServer);
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT);
+server.listen(process.env.PORT || 3000);
