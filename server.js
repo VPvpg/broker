@@ -3,15 +3,17 @@ const { ExpressPeerServer } = require('peer');
 const app = express();
 const server = require('http').createServer(app);
 
-// CORS для всех
+// CORS заголовки
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
+// Настройка PeerServer: убираем лишний путь, чтобы PeerJS находил свои ресурсы
 const peerServer = ExpressPeerServer(server, {
-    path: '/' // PeerJS будет работать в корне /myapp
+    debug: true,
+    path: '/' 
 });
 
 app.use('/myapp', peerServer);
