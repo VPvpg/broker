@@ -5,15 +5,14 @@ const server = require('http').createServer(app);
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "*");
     next();
 });
 
-const peerServer = ExpressPeerServer(server, {
-    path: '/'
-});
-
-// Слушаем дефолтный путь, который запрашивает клиент
-app.use('/peerjs', peerServer); 
+// Обработка всех возможных вариантов путей для предотвращения 404
+app.use('/myapp/peerjs', ExpressPeerServer(server, { path: '/' }));
+app.use('/myapp', ExpressPeerServer(server, { path: '/peerjs' }));
+app.use('/peerjs', ExpressPeerServer(server, { path: '/' }));
+app.use('/', ExpressPeerServer(server, { path: '/peerjs' }));
 
 server.listen(process.env.PORT || 3000);
